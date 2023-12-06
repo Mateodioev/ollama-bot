@@ -2,10 +2,12 @@
 
 namespace Mateodioev\OllamaBot\Ollama;
 
+use Amp\ByteStream\Payload;
+use Amp\Cancellation;
+use Amp\Http\Client\Request;
+use Amp\Http\Client\{HttpClientBuilder};
 use Exception;
-use Mateodioev\Bots\Telegram\Http\{AsyncClient, Methods};
 
-use function json_decode;
 use function json_encode;
 
 class HttpClient
@@ -15,12 +17,13 @@ class HttpClient
 
     public function __construct(
         private string $baseURL = self::BASE_URL,
-        public string $model = 'llama2'
+        public string $model = 'llama2',
+        public ?Cancellation $cancellation = null
     ) {
         $this->disableStream();
     }
 
-    public function completion(string $prompt, ?OllamaParameters $options = null, array $context = []): array
+    public function completion(string $prompt, ?OllamaParameters $options = null, array $context = []): Payload
     {
         return $this->makeRequest('/api/generate', [
             'model'   => $this->model,
@@ -31,7 +34,7 @@ class HttpClient
         ]);
     }
 
-    public function chat(Chat $messages, ?OllamaParameters $options = null): array
+    public function chat(Chat $messages, ?OllamaParameters $options = null): Payload
     {
         throw new Exception("Not implemented yet.");
 
@@ -43,7 +46,7 @@ class HttpClient
         ]); */
     }
 
-    public function tags(): array
+    public function tags(): Payload
     {
         return $this->makeRequest('/api/tags', [], 'GET');
     }
@@ -67,23 +70,28 @@ class HttpClient
         return $this;
     }
 
-    private function makeRequest(string $endpoint, array $body, string $method = 'POST'): array
+    private function makeRequest(string $endpoint, array $body, string $method = 'POST'): Payload
     {
+        $client = HttpClientBuilder::buildDefault();
+
         foreach ($body as $key => $value) {
             if (empty($value) && is_bool($value) === false) {
                 unset($body[$key]);
             }
         }
 
-        $client = new AsyncClient();
-        if ($method === 'POST') {
-            $client->new($this->baseURL . $endpoint, json_encode($body), Methods::POST);
-        } else {
-            $client->new($this->baseURL . $endpoint, json_encode($body), Methods::GET);
+        $req = new Request(
+            $this->baseURL . $endpoint,
+            $method
+        );
+        if (!empty($body)) {
+            $req->setBody(json_encode($body));
         }
-        $res  = $client->setTimeout(100)->run();
-        $body = $res->getBody();
+        $req->setTransferTimeout(100);
+        $req->setInactivityTimeout(20);
 
-        return json_decode($body, true, flags: JSON_THROW_ON_ERROR);
+        $res = $client->request($req, $this->cancellation);
+
+        return $res->getBody();
     }
 }
