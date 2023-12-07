@@ -1,6 +1,6 @@
 CREATE TABLE `users` (
   `id` int PRIMARY KEY,
-  `model` int NOT NULL,
+  `model` VARCHAR(20) NOT NULL,
   `rank` int NOT NULL
 );
 

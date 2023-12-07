@@ -22,12 +22,12 @@ class MysqlUserRepository implements UserRepository
     public function find(int $id): ?User
     {
         $result = $this->db->query(self::FIND_SQL, [$id]);
+        $result = $result[0] ?? [];
 
         if (empty(($result))) {
             return null;
         }
 
-        var_dump($result);
         return new User(
             $result['id'],
             $result['model'],

@@ -90,8 +90,8 @@ class HttpClient
         if (!empty($body)) {
             $req->setBody(json_encode($body));
         }
-        $req->setTransferTimeout(100);
-        $req->setInactivityTimeout(20);
+        $req->setTransferTimeout(300);
+        $req->setInactivityTimeout(70);
 
         $res = $client->request($req, $this->cancellation);
 
