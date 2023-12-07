@@ -4,7 +4,7 @@ namespace Mateodioev\OllamaBot\Events;
 
 use Mateodioev\Bots\Telegram\Api;
 use Mateodioev\OllamaBot\Cache\UserCache;
-use Mateodioev\OllamaBot\Models\{OllamaModels, User, UserRank};
+use Mateodioev\OllamaBot\Models\{User, UserRank};
 use Mateodioev\TgHandler\Commands\StopCommand;
 use Mateodioev\TgHandler\Context;
 
