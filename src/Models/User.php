@@ -5,16 +5,14 @@ namespace Mateodioev\OllamaBot\Models;
 class User
 {
     public UserRank $rank;
-    public OllamaModels $model;
 
     public array $lastContext = [];
 
     public function __construct(
         public int $id,
-        int $model,
+        public string $model,
         int $rank
     ) {
-        $this->model = OllamaModels::try($model);
         $this->rank  = UserRank::try($rank);
     }
 

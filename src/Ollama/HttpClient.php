@@ -34,6 +34,9 @@ class HttpClient
         ]);
     }
 
+    /**
+     * IGNORE
+     */
     public function chat(Chat $messages, ?OllamaParameters $options = null): Payload
     {
         throw new Exception("Not implemented yet.");
