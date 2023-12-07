@@ -5,6 +5,7 @@
 namespace Mateodioev\OllamaBot\Db;
 
 use PDO;
+use PDOException;
 
 class MysqlDatabase implements Database
 {
@@ -15,7 +16,14 @@ class MysqlDatabase implements Database
         private readonly string $username,
         private readonly string $password
     ) {
-        $this->pdo = new PDO($dsn, $username, $password);
+        try {
+            $this->pdo = new PDO($dsn, $username, $password);
+        } catch (PDOException $e) {
+            echo 'DSN: ' . $dsn . PHP_EOL;
+            echo 'username: ' . $username . PHP_EOL;
+            echo 'password: ' . $password . PHP_EOL;
+            throw $e;
+        }
     }
 
     public function connect(): void
