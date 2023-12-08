@@ -1,5 +1,5 @@
 CREATE TABLE `users` (
-  `id` int PRIMARY KEY,
+  `id` bigint PRIMARY KEY,
   `model` VARCHAR(20) NOT NULL,
   `rank` int NOT NULL
 );
@@ -9,7 +9,6 @@ CREATE TABLE `userRank` (
   `name` VARCHAR(20) NOT NULL
 );
 
-ALTER TABLE `users` ADD FOREIGN KEY (`model`) REFERENCES `ollamaModel` (`id`);
 ALTER TABLE `users` ADD FOREIGN KEY (`rank`) REFERENCES `userRank` (`id`);
 
 INSERT INTO `userRank` (id, name) VALUES (1, 'Banned');
