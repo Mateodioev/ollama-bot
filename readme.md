@@ -2,7 +2,7 @@
 
 This bot helps you to interact with [ollama models](https://ollama.ai/library)
 
-![How to use](https://i.imgur.com/fHfhjb2.mp4)
+https://github.com/Mateodioev/ollama-bot/assets/68271130/6cbec742-994b-4f79-85cf-804ec95663ad
 
 ## Commands
 If you want to generate a completion just send a private message to the bot or if you want to use in a public group use the command `/chat` followed by the text of your choice. Other commands:
