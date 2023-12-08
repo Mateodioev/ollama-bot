@@ -27,6 +27,6 @@ class Start extends MessageCommand
     {
         return "Hello " . $u->mention() . ", this is a bot that uses the ollama models.\nTo get an answer just send your question, you can change the model to use with the <code>/setmodel</code> command." .
             "\n\n<b>Available models:</b>\n" .
-            "\n- codellama\n- codellama-custom (<b>default</b>)\n- llama2";
+            "\n- codellama (<b>default</b>)\n- codellama-custom \n- llama2-uncensored\n- wizard-math";
     }
 }

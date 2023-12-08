@@ -9,8 +9,9 @@ use Exception;
 use Mateodioev\Bots\Telegram\Api;
 use Mateodioev\Bots\Telegram\Buttons\ButtonFactory;
 use Mateodioev\Bots\Telegram\Config\strUtils;
+use Mateodioev\Bots\Telegram\Exception\TelegramApiException;
 use Mateodioev\Bots\Telegram\Types\Message;
-use Mateodioev\OllamaBot\Cache\{CompletionCache, globalCache};
+use Mateodioev\OllamaBot\Cache\{CompletionCache, UserCache, globalCache};
 use Mateodioev\OllamaBot\Models\User;
 use Mateodioev\OllamaBot\Ollama\HttpClient;
 use Mateodioev\TgHandler\Context;
@@ -55,11 +56,16 @@ final class OllamaStreamCompletation
 
     public function run(string $payload)
     {
+        $this->logger->debug('Generating "{model}" completion for text: {txt}', [
+            'model' => $this->client->model,
+            'txt' => $payload
+        ]);
+
         $message  = $this->bot->replyToMessage($this->ctx->message, 'Please wait...');
         $cancelId = $this->futureEditRandomValues($message);
 
         try {
-            $body = $this->client->completion($payload);
+            $body = $this->client->completion($payload, context: $this->user->lastContext);
             EventLoop::cancel($cancelId);
             $this->streamBody($body, $message);
         } catch (CancelledException | SocketException) {
@@ -114,18 +120,41 @@ final class OllamaStreamCompletation
             }
         }
 
-        $this->bot->editMessageText(
-            $message->chat->id,
-            $text,
-            [
-                'message_id' => $message->message_id,
-                'parse_mode' => 'markdown',
-                'reply_markup' => (string) ButtonFactory::inlineKeyboardMarkup()->addCeil([
-                    'text' => 'Details 📝',
-                    'callback_data' => 'completion_details ' . $this->cacheResponse($txt)
-                ])
-            ]
-        );
+        if (empty($txt)) {
+            $this->ollamaError(['error' => 'Empty response']);
+            return;
+        }
+
+        $this->user->lastContext = $txt['context'] ?? [];
+        UserCache::update($this->user);
+
+        try {
+            $this->bot->editMessageText(
+                $message->chat->id,
+                $text,
+                [
+                    'message_id' => $message->message_id,
+                    'parse_mode' => 'markdown',
+                    'reply_markup' => (string) ButtonFactory::inlineKeyboardMarkup()->addCeil([
+                        'text' => 'Details 📝',
+                        'callback_data' => 'completion_details ' . $this->cacheResponse($txt)
+                    ])
+                ]
+            );
+        } catch (TelegramApiException) {
+            $this->bot->editMessageText(
+                $message->chat->id,
+                strUtils::scapeHtmlTags($text),
+                [
+                    'message_id' => $message->message_id,
+                    'parse_mode' => 'html',
+                    'reply_markup' => (string) ButtonFactory::inlineKeyboardMarkup()->addCeil([
+                        'text' => 'Details 📝',
+                        'callback_data' => 'completion_details ' . $this->cacheResponse($txt)
+                    ])
+                ]
+            );
+        }
     }
 
     private function ollamaError(array $err)

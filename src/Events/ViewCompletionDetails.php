@@ -22,6 +22,7 @@ class ViewCompletionDetails extends CallbackCommand
         $completion = CompletionCache::getHash($hash);
 
         if ($completion === null) {
+            $this->logger()->debug('Cant find detail "{id}"', ['id' => $hash]);
             $this->notFoundCompletion();
             return;
         }

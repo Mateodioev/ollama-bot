@@ -23,7 +23,7 @@ class SetModel extends MessageCommand
         $payload = trim($context->getPayload());
 
         if (empty($payload)) {
-            $this->onEmpty();
+            $this->onEmpty($user);
             return;
         }
 
@@ -36,11 +36,12 @@ class SetModel extends MessageCommand
         );
     }
 
-    private function onEmpty()
+    private function onEmpty(User $u)
     {
         $this->api()->replyToMessage(
             $this->ctx()->message,
             'Please specify a model to use'
+              . "\nYou current model is: " . $u->model
         );
     }
 }
