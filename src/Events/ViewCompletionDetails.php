@@ -7,6 +7,8 @@ use Mateodioev\TgHandler\Commands\{CallbackCommand};
 
 use function Amp\async;
 use function Amp\Future\awaitAll;
+use function json_encode;
+use function round;
 
 class ViewCompletionDetails extends CallbackCommand
 {
@@ -45,13 +47,13 @@ class ViewCompletionDetails extends CallbackCommand
 
     private function showCompletionDetails(array $completion)
     {
-        $this->logger()->debug('Show completion details for: {completion}', ['completion' => \json_encode($completion)]);
+        $this->logger()->debug('Show completion details for: {completion}', ['completion' => json_encode($completion)]);
 
         $text = 'Model: ' . $completion['model']
             . "\nTotal duration: " . static::readableNanoSeconds($completion['total_duration']) . '\'s'
             . "\nLoad model duration: " . static::readableNanoSeconds($completion['load_duration']) . '\'s'
             // I'm not sure if this is the right way to calculate the token/s
-            . "\nToken/s: " . \round($completion['eval_count'] / $this->nanoSecondsToSeconds($completion['eval_duration']), 2);
+            . "\nToken/s: " . round($completion['eval_count'] / $this->nanoSecondsToSeconds($completion['eval_duration']), 2);
 
         $this->api()->answerCallbackQuery($this->ctx()->callbackQuery()->id, [
             'text' => $text,
@@ -71,7 +73,7 @@ class ViewCompletionDetails extends CallbackCommand
         foreach ($units as $unit => $divisor) {
             $value = $nanoseconds / $divisor;
             if ($value >= 1) {
-                return \round($value, 2) . ' ' . $unit;
+                return round($value, 2) . ' ' . $unit;
             }
         }
 

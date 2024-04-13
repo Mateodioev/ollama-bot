@@ -2,7 +2,7 @@
 
 use Mateodioev\OllamaBot\Cache\UserCache;
 use Mateodioev\OllamaBot\Db\MysqlDatabase;
-use Mateodioev\OllamaBot\Events\{CancelCompletation, Chat, PrivateTextListener, SetModel, Start, ViewCompletionDetails};
+use Mateodioev\OllamaBot\Events\{CancelCompletation, Chat, Models, PrivateTextListener, SetModel, Start, ViewCompletionDetails};
 use Mateodioev\OllamaBot\Repository\MysqlUserRepository;
 use Mateodioev\TgHandler\{Bot, Log};
 use Revolt\EventLoop;
@@ -28,6 +28,7 @@ $bot
     ->onEvent(Start::get())
     ->onEvent(Chat::get())
     ->onEvent(SetModel::get())
+    ->onEvent(Models::get())
     ->onEvent(CancelCompletation::get())
     ->onEvent(new PrivateTextListener())
     ->onEvent(new ViewCompletionDetails());

@@ -23,8 +23,6 @@ class Start extends MessageCommand
 
     public static function helpMessage(User $u): string
     {
-        return "Hello " . $u->mention() . ", this is a bot that uses the ollama models.\nTo get an answer just send your question, you can change the model to use with the <code>/setmodel</code> command." .
-            "\n\n<b>Available models:</b>\n" .
-            "\n- codellama (<b>default</b>)\n- codellama-custom \n- llama2-uncensored\n- wizard-math";
+        return "Hello " . $u->mention() . ", this is a bot that uses the ollama models.\nTo get an answer just send your question, you can change the model to use with the <code>/setmodel</code> command.\nTo view the available models use the <code>/models</code> command.";
     }
 }
