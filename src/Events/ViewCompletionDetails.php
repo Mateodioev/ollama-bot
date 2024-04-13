@@ -2,10 +2,8 @@
 
 namespace Mateodioev\OllamaBot\Events;
 
-use Mateodioev\Bots\Telegram\Api;
 use Mateodioev\OllamaBot\Cache\CompletionCache;
 use Mateodioev\TgHandler\Commands\{CallbackCommand};
-use Mateodioev\TgHandler\Context;
 
 use function Amp\async;
 use function Amp\Future\awaitAll;
@@ -16,9 +14,9 @@ class ViewCompletionDetails extends CallbackCommand
 
     protected string $name = 'completion_details';
 
-    public function handle(Api $bot, Context $context, array $args = [])
+    public function execute(array $args = [])
     {
-        $hash = $context->getPayload();
+        $hash = $this->ctx()->getPayload();
         $completion = CompletionCache::getHash($hash);
 
         if ($completion === null) {
@@ -47,19 +45,36 @@ class ViewCompletionDetails extends CallbackCommand
 
     private function showCompletionDetails(array $completion)
     {
+        $this->logger()->debug('Show completion details for: {completion}', ['completion' => \json_encode($completion)]);
+
         $text = 'Model: ' . $completion['model']
-            . "\nTotal duration: " . $this->nanoSecondsToSeconds($completion['total_duration']) . '\'s'
-            . "\nLoad model duration: " . $this->nanoSecondsToSeconds($completion['load_duration']) . '\'s'
-            . "\nToken/S: " . round($completion['eval_count'] / $completion['eval_duration'], 3);
+            . "\nTotal duration: " . static::readableNanoSeconds($completion['total_duration']) . '\'s'
+            . "\nLoad model duration: " . static::readableNanoSeconds($completion['load_duration']) . '\'s'
+            // I'm not sure if this is the right way to calculate the token/s
+            . "\nToken/s: " . \round($completion['eval_count'] / $this->nanoSecondsToSeconds($completion['eval_duration']), 2);
 
         $this->api()->answerCallbackQuery($this->ctx()->callbackQuery()->id, [
             'text' => $text,
-            'show_alert' => false,
+            'show_alert' => true,
         ]);
     }
 
-    private function nanoSecondsToSeconds(int $nanoseconds, int $round = 2): float
+    private function nanoSecondsToSeconds(int $nanoseconds): float
     {
-        return round($nanoseconds / self::NANOSECONDS, $round);
+        return $nanoseconds / self::NANOSECONDS;
+    }
+
+    public static function readableNanoSeconds(int $nanoseconds)
+    {
+        $units = ['s' => 1000000000, 'ms' => 1000000, 'μs' => 1000, 'ns' => 1];
+
+        foreach ($units as $unit => $divisor) {
+            $value = $nanoseconds / $divisor;
+            if ($value >= 1) {
+                return \round($value, 2) . ' ' . $unit;
+            }
+        }
+
+        return $nanoseconds . ' ns';
     }
 }
