@@ -2,9 +2,7 @@
 
 namespace Mateodioev\OllamaBot\Events;
 
-use Mateodioev\Bots\Telegram\Api;
 use Mateodioev\TgHandler\Commands\MessageCommand;
-use Mateodioev\TgHandler\Context;
 use Mateodioev\TgHandler\Filters\{FilterNot, FilterPrivateChat};
 
 #[FilterNot(new FilterPrivateChat())]
@@ -16,9 +14,9 @@ class Chat extends MessageCommand
         '\Mateodioev\OllamaBot\Events\Middlewares::authUser',
     ];
 
-    public function handle(Api $bot, Context $context, array $args = [])
+    public function execute(array $args = [])
     {
-        $payload = $context->getPayload();
+        $payload = $this->ctx()->getPayload();
 
         if (empty($payload)) {
             $this->onEmpty();
@@ -27,8 +25,8 @@ class Chat extends MessageCommand
 
         $user = $args[0];
         $streamCompletation = new OllamaStreamCompletation(
-            $bot,
-            $context,
+            $this->api(),
+            $this->ctx(),
             $user,
             $this->logger()
         );

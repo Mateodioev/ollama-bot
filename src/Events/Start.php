@@ -2,10 +2,8 @@
 
 namespace Mateodioev\OllamaBot\Events;
 
-use Mateodioev\Bots\Telegram\Api;
 use Mateodioev\Bots\Telegram\Types\User;
 use Mateodioev\TgHandler\Commands\MessageCommand;
-use Mateodioev\TgHandler\Context;
 
 class Start extends MessageCommand
 {
@@ -17,10 +15,10 @@ class Start extends MessageCommand
         '\Mateodioev\OllamaBot\Events\Middlewares::authUser',
     ];
 
-    public function handle(Api $bot, Context $context, array $args = [])
+    public function execute(array $args = [])
     {
-        $u = $context->getUser();
-        $bot->replyToMessage($context->message, self::helpMessage($u));
+        $u = $this->ctx()->getUser();
+        $this->api()->replyToMessage($this->ctx()->message, self::helpMessage($u));
     }
 
     public static function helpMessage(User $u): string

@@ -7,9 +7,9 @@ use Amp\Cache\{Cache, LocalCache};
 class globalCache
 {
     public const TIME_SECOND = 1,
-    TIME_MINUTE = 60,
-    TIME_HOUR   = 3600,
-    TIME_DAY    = 86400;
+        TIME_MINUTE = 60,
+        TIME_HOUR   = 3600,
+        TIME_DAY    = 86400;
 
     private static ?Cache $cache = null;
 

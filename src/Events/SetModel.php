@@ -2,11 +2,9 @@
 
 namespace Mateodioev\OllamaBot\Events;
 
-use Mateodioev\Bots\Telegram\Api;
 use Mateodioev\OllamaBot\Cache\UserCache;
 use Mateodioev\OllamaBot\Models\User;
 use Mateodioev\TgHandler\Commands\MessageCommand;
-use Mateodioev\TgHandler\Context;
 
 class SetModel extends MessageCommand
 {
@@ -16,11 +14,11 @@ class SetModel extends MessageCommand
         '\Mateodioev\OllamaBot\Events\Middlewares::authUser',
     ];
 
-    public function handle(Api $bot, Context $context, array $args = [])
+    public function execute(array $args = [])
     {
         /** @var User $user */
         $user    = $args[0];
-        $payload = trim($context->getPayload());
+        $payload = trim($this->ctx()->getPayload());
 
         if (empty($payload)) {
             $this->onEmpty($user);
@@ -41,7 +39,7 @@ class SetModel extends MessageCommand
         $this->api()->replyToMessage(
             $this->ctx()->message,
             'Please specify a model to use'
-              . "\nYou current model is: " . $u->model
+                . "\nYou current model is: " . $u->model
         );
     }
 }

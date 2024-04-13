@@ -10,7 +10,7 @@ use Mateodioev\TgHandler\Context;
 
 class Middlewares
 {
-    public const DEFAULT_MODEL = 'codellama';
+    public const DEFAULT_MODEL = 'llama2';
 
     public static function registerUser(Context $ctx, Api $bot): User
     {
