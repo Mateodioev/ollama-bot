@@ -1,6 +1,8 @@
 .env
 *.cache
 composer.lock
+.windsurfrules
+*.sqlite
 
 vendor/
 .idea/
