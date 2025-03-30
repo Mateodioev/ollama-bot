@@ -3,15 +3,18 @@
 namespace Mateodioev\OllamaBot\Events;
 
 use Mateodioev\OllamaBot\Cache\UserCache;
+use Mateodioev\OllamaBot\Middlewares\AuthUsers;
+use Mateodioev\OllamaBot\Middlewares\FindUserOrRegister;
 use Mateodioev\OllamaBot\Models\User;
 use Mateodioev\TgHandler\Commands\MessageCommand;
 
 class SetModel extends MessageCommand
 {
-    protected string $name = 'setmodel';
-    protected array $prefix = ['/', '!', '.'];
-    protected array $middlewares = [
-        '\Mateodioev\OllamaBot\Events\Middlewares::authUser',
+    protected string $name        = 'setmodel';
+    protected array  $prefix      = ['/', '!', '.'];
+    protected array  $middlewares = [
+        FindUserOrRegister::class,
+        AuthUsers::class,
     ];
 
     public function execute(array $args = [])
@@ -39,7 +42,7 @@ class SetModel extends MessageCommand
         $this->api()->replyToMessage(
             $this->ctx()->message,
             'Please specify a model to use'
-                . "\nYou current model is: " . $u->model
+            . "\nYou current model is: " . $u->model
         );
     }
 }

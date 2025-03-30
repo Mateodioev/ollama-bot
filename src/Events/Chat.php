@@ -2,6 +2,7 @@
 
 namespace Mateodioev\OllamaBot\Events;
 
+use Mateodioev\OllamaBot\Middlewares\FindUserOrRegister;
 use Mateodioev\TgHandler\Commands\MessageCommand;
 use Mateodioev\TgHandler\Filters\{FilterNot, FilterPrivateChat};
 
@@ -11,7 +12,7 @@ class Chat extends MessageCommand
     protected string $name        = 'chat';
     protected array  $prefix      = ['/', '!', '.'];
     protected array  $middlewares = [
-        '\Mateodioev\OllamaBot\Events\Middlewares::authUser',
+        FindUserOrRegister::class,
     ];
 
     public function execute(array $args = [])
@@ -23,15 +24,15 @@ class Chat extends MessageCommand
             return;
         }
 
-        $user               = $args[0];
-        $streamCompletation = new OllamaStreamCompletion(
+        $user   = $args[0];
+        $stream = new OllamaStreamCompletion(
             $this->api(),
             $this->ctx(),
             $user,
             $this->logger()
         );
 
-        $streamCompletation->run($payload);
+        $stream->run($payload);
     }
 
     private function onEmpty()

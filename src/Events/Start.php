@@ -3,16 +3,19 @@
 namespace Mateodioev\OllamaBot\Events;
 
 use Mateodioev\Bots\Telegram\Types\User;
+use Mateodioev\OllamaBot\Middlewares\AuthUsers;
+use Mateodioev\OllamaBot\Middlewares\FindUserOrRegister;
 use Mateodioev\TgHandler\Commands\MessageCommand;
 
 class Start extends MessageCommand
 {
-    protected string $name = 'start';
+    protected string $name        = 'start';
     protected string $description = 'Start the bot';
-    protected array $prefix = ['/', '!', '.'];
-    protected array $alias = ['help'];
-    protected array $middlewares = [
-        '\Mateodioev\OllamaBot\Events\Middlewares::authUser',
+    protected array  $prefix      = ['/', '!', '.'];
+    protected array  $alias       = ['help'];
+    protected array  $middlewares = [
+        FindUserOrRegister::class,
+        AuthUsers::class,
     ];
 
     public function execute(array $args = [])

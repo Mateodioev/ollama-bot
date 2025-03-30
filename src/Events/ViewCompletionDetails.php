@@ -12,13 +12,13 @@ use function round;
 
 class ViewCompletionDetails extends CallbackCommand
 {
-    private const NANOSECONDS = 1_000_000_000;
+    private const int NANOSECONDS = 1_000_000_000;
 
     protected string $name = 'completion_details';
 
     public function execute(array $args = [])
     {
-        $hash = $this->ctx()->getPayload();
+        $hash       = $this->ctx()->getPayload();
         $completion = CompletionCache::getHash($hash);
 
         if ($completion === null) {
@@ -32,7 +32,7 @@ class ViewCompletionDetails extends CallbackCommand
 
     private function notFoundCompletion()
     {
-        $futures = [];
+        $futures   = [];
         $futures[] = async($this->api()->editMessageReplyMarkup(...), [
             'chat_id'    => $this->ctx()->getChatId(),
             'message_id' => $this->ctx()->getMessageId(),
@@ -56,7 +56,7 @@ class ViewCompletionDetails extends CallbackCommand
             . "\nToken/s: " . round($completion['eval_count'] / $this->nanoSecondsToSeconds($completion['eval_duration']), 2);
 
         $this->api()->answerCallbackQuery($this->ctx()->callbackQuery()->id, [
-            'text' => $text,
+            'text'       => $text,
             'show_alert' => true,
         ]);
     }

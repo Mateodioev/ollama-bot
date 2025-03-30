@@ -27,7 +27,7 @@ use function spl_object_id;
 
 final class OllamaStreamCompletion
 {
-    private const SPLIT_TOKEN = 27;
+    private const int SPLIT_TOKEN = 27;
 
     private HttpClient           $client;
     private DeferredCancellation $deferredCancellation;
@@ -38,8 +38,7 @@ final class OllamaStreamCompletion
         private Context $ctx,
         public User $user,
         private ?Logger $logger = null
-    )
-    {
+    ) {
         $this->deferredCancellation = new DeferredCancellation();
         globalCache::get()->set(
             $this->cancelToken = spl_object_id($this->deferredCancellation),

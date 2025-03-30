@@ -2,6 +2,8 @@
 
 namespace Mateodioev\OllamaBot\Events;
 
+use Mateodioev\OllamaBot\Middlewares\AuthUsers;
+use Mateodioev\OllamaBot\Middlewares\FindUserOrRegister;
 use Mateodioev\OllamaBot\Models\User;
 use Mateodioev\TgHandler\Events\Types\MessageEvent;
 use Mateodioev\TgHandler\Filters\FilterPrivateChat;
@@ -10,21 +12,22 @@ use Mateodioev\TgHandler\Filters\FilterPrivateChat;
 class PrivateTextListener extends MessageEvent
 {
     protected array $middlewares = [
-        '\Mateodioev\OllamaBot\Events\Middlewares::silentAuthUser',
+        FindUserOrRegister::class,
+        AuthUsers::class,
     ];
 
     public function execute(array $args = [])
     {
         /** @var User $user */
-        $user               = $args[0];
-        $streamCompletation = new OllamaStreamCompletion(
+        $user   = $args[0];
+        $stream = new OllamaStreamCompletion(
             $this->api(),
             $this->ctx(),
             $user,
             $this->logger()
         );
 
-        $streamCompletation->run($this->ctx()->message->text);
+        $stream->run($this->ctx()->message->text);
     }
 
     public function isValid(): bool
