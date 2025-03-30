@@ -3,6 +3,7 @@
     "description": "Bot the uses local ollama model",
     "type": "project",
     "require": {
+        "php": "^8.4",
         "vlucas/phpdotenv": "^5.6",
         "ext-pdo": "*",
         "mateodioev/tg-handler": "^5.4"
