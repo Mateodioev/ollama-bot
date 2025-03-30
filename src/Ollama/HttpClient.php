@@ -4,8 +4,8 @@ namespace Mateodioev\OllamaBot\Ollama;
 
 use Amp\ByteStream\Payload;
 use Amp\Cancellation;
-use Amp\Http\Client\Request;
 use Amp\Http\Client\{HttpClientBuilder};
+use Amp\Http\Client\Request;
 use Exception;
 
 use function json_encode;

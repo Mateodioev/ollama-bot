@@ -16,8 +16,8 @@ class PrivateTextListener extends MessageEvent
     public function execute(array $args = [])
     {
         /** @var User $user */
-        $user       = $args[0];
-        $streamCompletation = new OllamaStreamCompletation(
+        $user               = $args[0];
+        $streamCompletation = new OllamaStreamCompletion(
             $this->api(),
             $this->ctx(),
             $user,
@@ -30,7 +30,7 @@ class PrivateTextListener extends MessageEvent
     public function isValid(): bool
     {
         $text = $this->ctx()->message->text;
-        $cmd = $text[0] ?? '';
+        $cmd  = $text[0] ?? '';
 
         // Make sure it is not a command
         return parent::isValid()

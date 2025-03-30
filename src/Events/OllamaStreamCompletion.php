@@ -3,8 +3,8 @@
 namespace Mateodioev\OllamaBot\Events;
 
 use Amp\ByteStream\Payload;
-use Amp\Http\Client\SocketException;
 use Amp\{CancelledException, DeferredCancellation};
+use Amp\Http\Client\SocketException;
 use Exception;
 use Mateodioev\Bots\Telegram\Api;
 use Mateodioev\Bots\Telegram\Buttons\ButtonFactory;
@@ -17,7 +17,6 @@ use Mateodioev\OllamaBot\Ollama\HttpClient;
 use Mateodioev\TgHandler\Context;
 use Mateodioev\TgHandler\Log\Logger;
 use Revolt\EventLoop;
-
 use Throwable;
 
 use function array_rand;
@@ -26,20 +25,21 @@ use function Mateodioev\OllamaBot\env;
 use function rand;
 use function spl_object_id;
 
-final class OllamaStreamCompletation
+final class OllamaStreamCompletion
 {
     private const SPLIT_TOKEN = 27;
 
-    private HttpClient $client;
+    private HttpClient           $client;
     private DeferredCancellation $deferredCancellation;
-    private string $cancelToken;
+    private string               $cancelToken;
 
     public function __construct(
         private Api $bot,
         private Context $ctx,
         public User $user,
         private ?Logger $logger = null
-    ) {
+    )
+    {
         $this->deferredCancellation = new DeferredCancellation();
         globalCache::get()->set(
             $this->cancelToken = spl_object_id($this->deferredCancellation),
@@ -58,7 +58,7 @@ final class OllamaStreamCompletation
     {
         $this->logger->debug('Generating "{model}" completion for text: {txt}', [
             'model' => $this->client->model,
-            'txt' => $payload
+            'txt'   => $payload,
         ]);
 
         $message  = $this->bot->replyToMessage($this->ctx->message, 'Please wait...');
@@ -71,7 +71,7 @@ final class OllamaStreamCompletation
         } catch (CancelledException | SocketException) {
             $this->bot->editMessageReplyMarkup([
                 'chat_id'    => $message->chat->id,
-                'message_id' => $message->message_id
+                'message_id' => $message->message_id,
             ]);
         } catch (Exception $e) {
             echo $e::class . '-' . $e . PHP_EOL;
@@ -96,7 +96,7 @@ final class OllamaStreamCompletation
 
         while (null !== $content = $body->read()) {
             $this->logger->debug('Ollama completion response: {response}', [
-                'response' => \trim($content)
+                'response' => \trim($content),
             ]);
 
             $i++;
@@ -133,10 +133,10 @@ final class OllamaStreamCompletation
                 $message->chat->id,
                 $text,
                 [
-                    'message_id' => $message->message_id,
-                    'parse_mode' => 'markdown',
+                    'message_id'   => $message->message_id,
+                    'parse_mode'   => 'markdown',
                     'reply_markup' => (string) ButtonFactory::inlineKeyboardMarkup()->addCeil([
-                        'text' => 'Details 📝',
+                        'text'          => 'Details 📝',
                         'callback_data' => 'completion_details ' . $this->cacheResponse($txt)
                     ])
                 ]
@@ -146,10 +146,10 @@ final class OllamaStreamCompletation
                 $message->chat->id,
                 strUtils::scapeHtmlTags($text),
                 [
-                    'message_id' => $message->message_id,
-                    'parse_mode' => 'html',
+                    'message_id'   => $message->message_id,
+                    'parse_mode'   => 'html',
                     'reply_markup' => (string) ButtonFactory::inlineKeyboardMarkup()->addCeil([
-                        'text' => 'Details 📝',
+                        'text'          => 'Details 📝',
                         'callback_data' => 'completion_details ' . $this->cacheResponse($txt)
                     ])
                 ]
@@ -183,7 +183,7 @@ final class OllamaStreamCompletation
             'Please wait...',
             'I\'m thinking... 🤔',
             'let\'s go for a coffee ☕️',
-            'Oops, it\'s taking longer than I thought.'
+            'Oops, it\'s taking longer than I thought.',
         ];
 
         $params = [

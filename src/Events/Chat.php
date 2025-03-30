@@ -8,9 +8,9 @@ use Mateodioev\TgHandler\Filters\{FilterNot, FilterPrivateChat};
 #[FilterNot(new FilterPrivateChat())]
 class Chat extends MessageCommand
 {
-    protected string $name = 'chat';
-    protected array $prefix = ['/', '!', '.'];
-    protected array $middlewares = [
+    protected string $name        = 'chat';
+    protected array  $prefix      = ['/', '!', '.'];
+    protected array  $middlewares = [
         '\Mateodioev\OllamaBot\Events\Middlewares::authUser',
     ];
 
@@ -23,8 +23,8 @@ class Chat extends MessageCommand
             return;
         }
 
-        $user = $args[0];
-        $streamCompletation = new OllamaStreamCompletation(
+        $user               = $args[0];
+        $streamCompletation = new OllamaStreamCompletion(
             $this->api(),
             $this->ctx(),
             $user,

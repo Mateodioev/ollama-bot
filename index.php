@@ -2,7 +2,7 @@
 
 use Mateodioev\OllamaBot\Cache\UserCache;
 use Mateodioev\OllamaBot\Db\MysqlDatabase;
-use Mateodioev\OllamaBot\Events\{TerminateCompletionRequest, Chat, Models, PrivateTextListener, SetModel, Start, ViewCompletionDetails};
+use Mateodioev\OllamaBot\Events\{Chat, Models, PrivateTextListener, SetModel, Start, TerminateCompletionRequest, ViewCompletionDetails};
 use Mateodioev\OllamaBot\Repository\MysqlUserRepository;
 use Mateodioev\TgHandler\{Bot, Log};
 use Revolt\EventLoop;

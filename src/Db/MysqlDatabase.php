@@ -7,6 +7,7 @@ namespace Mateodioev\OllamaBot\Db;
 use PDO;
 use PDOException;
 use RuntimeException;
+
 use function Mateodioev\OllamaBot\env;
 
 class MysqlDatabase implements Database
