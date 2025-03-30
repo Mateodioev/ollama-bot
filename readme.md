@@ -13,9 +13,7 @@ If you want to generate a completion just send a private message to the bot or i
 ## Installation
 
 ### Requirements:
-- \>= PHP 8.2
-- Mysql
-- Access to ollama api
+- Docker
 
 ### Steps
 
@@ -25,26 +23,18 @@ git clone https://github.com/Mateodioev/ollama-bot.git
 cd ollama-bot
 ```
 
-2. Install dependencies
+2. Setup docker
 ```bash
-composer install --optimize-autoloader --no-interaction --no-dev
+docker compose up --build
 ```
 
-3. Setup your database mysql with file `db/main.sql`
-
-4. Create an edit .env file
+3. Install ollama models
 ```bash
-cp .env.example .env
-vim .env # Or use your favorite editor
-```
-
-5. Run the bot
-```bash
-php index.php
+docker compose exec -T ollama ollama pull <model name>
 ```
 
 
 **Note**
-> If your default model is diferent to `codellama` for example `llama2`, edit the file `src/Events/Middlewares.php` line 13
+> If your default model is different to `codellama` for example `llama3`, edit the file `src/Middlewares/FindUserOrRegister.php` line 17 and change to you default model.
 
 See ollama docs in https://github.com/jmorganca/ollama

@@ -1,0 +1,46 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ollama-bot
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=ollama
+      - DB_NAME=bot
+      - DB_PASS=ollamasecret
+      - BOT_TOKEN=${BOT_TOKEN}
+      - BOT_LOG_CHANNEL_ID=${BOT_LOG_CHANNEL_ID}
+      - OLLAMA_HOST=http://ollama:11434
+      - BASE_DIR=/app/
+      - LOG_DIR=/app/logs
+    volumes:
+      - .:/app
+    depends_on:
+      - mysql
+      - ollama
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: bot
+      MYSQL_USER: ollama
+      MYSQL_PASSWORD: ollamasecret
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  ollama:
+    build:
+      context: .
+      dockerfile: Dockerfile.ollama
+    container_name: ollama
+    pull_policy: always
+    tty: true
+    volumes:
+      - ollama_models:/root/.ollama
+
+volumes:
+  mysql_data:
+  ollama_models:

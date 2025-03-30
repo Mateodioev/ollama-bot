@@ -14,7 +14,7 @@ use Mateodioev\TgHandler\Middleware\Middleware;
 
 class FindUserOrRegister extends Middleware
 {
-    public const string DEFAULT_MODEL = 'deepseek-r1:8b';
+    public const string DEFAULT_MODEL = 'llama3';
 
     public function __invoke(Context $ctx, Api $api, array $args = [])
     {
