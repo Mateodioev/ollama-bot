@@ -3,8 +3,7 @@
 namespace Mateodioev\OllamaBot\Events;
 
 use Mateodioev\OllamaBot\Cache\UserCache;
-use Mateodioev\OllamaBot\Middlewares\AuthUsers;
-use Mateodioev\OllamaBot\Middlewares\FindUserOrRegister;
+use Mateodioev\OllamaBot\Middlewares\{AuthUsers, FindUserOrRegister};
 use Mateodioev\OllamaBot\Models\User;
 use Mateodioev\TgHandler\Commands\MessageCommand;
 
@@ -20,7 +19,7 @@ class SetModel extends MessageCommand
     public function execute(array $args = [])
     {
         /** @var User $user */
-        $user    = $args[0];
+        $user    = $args[FindUserOrRegister::class];
         $payload = trim($this->ctx()->getPayload());
 
         if (empty($payload)) {

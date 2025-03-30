@@ -3,8 +3,7 @@
 namespace Mateodioev\OllamaBot\Events;
 
 use Mateodioev\Bots\Telegram\Types\User;
-use Mateodioev\OllamaBot\Middlewares\AuthUsers;
-use Mateodioev\OllamaBot\Middlewares\FindUserOrRegister;
+use Mateodioev\OllamaBot\Middlewares\{AuthUsers, FindUserOrRegister};
 use Mateodioev\TgHandler\Commands\MessageCommand;
 
 class Start extends MessageCommand

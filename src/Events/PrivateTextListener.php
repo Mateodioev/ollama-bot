@@ -2,8 +2,7 @@
 
 namespace Mateodioev\OllamaBot\Events;
 
-use Mateodioev\OllamaBot\Middlewares\AuthUsers;
-use Mateodioev\OllamaBot\Middlewares\FindUserOrRegister;
+use Mateodioev\OllamaBot\Middlewares\{AuthUsers, FindUserOrRegister};
 use Mateodioev\OllamaBot\Models\User;
 use Mateodioev\TgHandler\Events\Types\MessageEvent;
 use Mateodioev\TgHandler\Filters\FilterPrivateChat;
@@ -19,7 +18,7 @@ class PrivateTextListener extends MessageEvent
     public function execute(array $args = [])
     {
         /** @var User $user */
-        $user   = $args[0];
+        $user   = $args[FindUserOrRegister::class];
         $stream = new OllamaStreamCompletion(
             $this->api(),
             $this->ctx(),

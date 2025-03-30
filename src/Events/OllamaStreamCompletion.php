@@ -59,6 +59,9 @@ final class OllamaStreamCompletion
             'model' => $this->client->model,
             'txt'   => $payload,
         ]);
+        $this->logger->debug('User context: {context}', [
+            'context' => json_encode($this->user->lastContext),
+        ]);
 
         $message  = $this->bot->replyToMessage($this->ctx->message, 'Please wait...');
         $cancelId = $this->futureEditRandomValues($message);

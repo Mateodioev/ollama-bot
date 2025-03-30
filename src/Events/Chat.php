@@ -24,7 +24,7 @@ class Chat extends MessageCommand
             return;
         }
 
-        $user   = $args[0];
+        $user   = $args[FindUserOrRegister::class];
         $stream = new OllamaStreamCompletion(
             $this->api(),
             $this->ctx(),
