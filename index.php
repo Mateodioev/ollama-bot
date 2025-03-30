@@ -1,9 +1,9 @@
 <?php
 
 use Mateodioev\OllamaBot\Cache\UserCache;
-use Mateodioev\OllamaBot\Db\MysqlDatabase;
+use Mateodioev\OllamaBot\Db\{MysqlDatabase, SqliteDatabase};
 use Mateodioev\OllamaBot\Events\{Chat, Models, PrivateTextListener, SetModel, Start, TerminateCompletionRequest, ViewCompletionDetails};
-use Mateodioev\OllamaBot\Repository\MysqlUserRepository;
+use Mateodioev\OllamaBot\Repository\{SqliteUserRepository};
 use Mateodioev\TgHandler\{Bot, Log};
 use Revolt\EventLoop;
 
@@ -35,8 +35,9 @@ $bot
     ->onEvent(new PrivateTextListener())
     ->onEvent(new ViewCompletionDetails());
 
-$db = new MysqlDatabase('mysql:host=' . env('DB_HOST') . ';dbname=' . env('DB_NAME') . ';charset=utf8mb4', env('DB_USER'), env('DB_PASS'));
-UserCache::setRepo(new MysqlUserRepository($db));
+// $db = new MysqlDatabase('mysql:host=' . env('DB_HOST') . ';dbname=' . env('DB_NAME') . ';charset=utf8mb4', env('DB_USER'), env('DB_PASS'));
+$db = new SqliteDatabase('db.sqlite');
+UserCache::setRepo(new SqliteUserRepository($db));
 
 $bot->longPolling(
     (int) env('BOT_POLLING_TIMEOUT', 60),
