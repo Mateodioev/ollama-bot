@@ -7,7 +7,7 @@ use Mateodioev\OllamaBot\Cache\globalCache;
 use Mateodioev\TgHandler\Commands\{CallbackCommand};
 use Throwable;
 
-class CancelCompletation extends CallbackCommand
+class TerminateCompletionRequest extends CallbackCommand
 {
     protected string $name = 'cancel';
 
@@ -33,7 +33,7 @@ class CancelCompletation extends CallbackCommand
         } finally {
             $this->api()->answerCallbackQuery($this->ctx()->callbackQuery()->id, [
                 'text'       => 'cancelled',
-                'show_alert' => true
+                'show_alert' => true,
             ]);
         }
     }

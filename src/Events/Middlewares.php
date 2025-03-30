@@ -10,7 +10,7 @@ use Mateodioev\TgHandler\Context;
 
 class Middlewares
 {
-    public const DEFAULT_MODEL = 'llama2';
+    public const DEFAULT_MODEL = 'deepseek-r1:8b';
 
     public static function registerUser(Context $ctx, Api $bot): User
     {

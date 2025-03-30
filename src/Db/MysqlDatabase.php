@@ -6,6 +6,8 @@ namespace Mateodioev\OllamaBot\Db;
 
 use PDO;
 use PDOException;
+use RuntimeException;
+use function Mateodioev\OllamaBot\env;
 
 class MysqlDatabase implements Database
 {
@@ -18,6 +20,7 @@ class MysqlDatabase implements Database
     ) {
         try {
             $this->pdo = new PDO($dsn, $username, $password);
+            $this->query(file_get_contents(env('BASE_DIR') . "db/main.sql"));
         } catch (PDOException $e) {
             echo 'DSN: ' . $dsn . PHP_EOL;
             echo 'username: ' . $username . PHP_EOL;
@@ -26,8 +29,18 @@ class MysqlDatabase implements Database
         }
     }
 
+    /**
+     * @throws RuntimeException
+     */
     public function connect(): void
     {
+        if ($this->pdo === null) {
+            try {
+                $this->pdo = new PDO($this->dsn, $this->username, $this->password);
+            } catch (PDOException $e) {
+                throw new RuntimeException('Connection failed: ' . $e->getMessage(), previous: $e);
+            }
+        }
     }
 
     public function disconnect(): void

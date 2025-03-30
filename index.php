@@ -2,7 +2,7 @@
 
 use Mateodioev\OllamaBot\Cache\UserCache;
 use Mateodioev\OllamaBot\Db\MysqlDatabase;
-use Mateodioev\OllamaBot\Events\{CancelCompletation, Chat, Models, PrivateTextListener, SetModel, Start, ViewCompletionDetails};
+use Mateodioev\OllamaBot\Events\{TerminateCompletionRequest, Chat, Models, PrivateTextListener, SetModel, Start, ViewCompletionDetails};
 use Mateodioev\OllamaBot\Repository\MysqlUserRepository;
 use Mateodioev\TgHandler\{Bot, Log};
 use Revolt\EventLoop;
@@ -16,20 +16,22 @@ require __DIR__ . '/vendor/autoload.php';
 // Create logger
 $logStreams = new Log\BulkStream(
     new Log\TerminalStream(),
-    (new Log\PhpNativeStream())->activate(env('LOG_DIR', __DIR__))
+    new Log\PhpNativeStream()->activate(env('LOG_DIR', __DIR__))
 );
-$logger = new Log\Logger($logStreams);
+$logger     = new Log\Logger($logStreams);
 
 // Create bot
 $bot = new Bot(env('BOT_TOKEN'), $logger);
-$logStreams->add(new Log\BotApiStream($bot->getApi(), (int) env('BOT_LOG_CHANNEL_ID')));
+
+$conf = Log\BotApiStreamConfig::default($bot->getApi()->getToken(), env('BOT_LOG_CHANNEL_ID'));
+$logStreams->add(new Log\BotApiStream($conf));
 
 $bot
-    ->onEvent(Start::get())
-    ->onEvent(Chat::get())
-    ->onEvent(SetModel::get())
-    ->onEvent(Models::get())
-    ->onEvent(CancelCompletation::get())
+    ->onEvent(new Start())
+    ->onEvent(new Chat())
+    ->onEvent(new SetModel())
+    ->onEvent(new Models())
+    ->onEvent(new TerminateCompletionRequest())
     ->onEvent(new PrivateTextListener())
     ->onEvent(new ViewCompletionDetails());
 
