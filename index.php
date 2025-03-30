@@ -1,8 +1,8 @@
 <?php
 
 use Mateodioev\OllamaBot\Cache\UserCache;
-use Mateodioev\OllamaBot\Db\{MysqlDatabase, SqliteDatabase};
-use Mateodioev\OllamaBot\Events\{Chat, Models, PrivateTextListener, SetModel, Start, TerminateCompletionRequest, ViewCompletionDetails};
+use Mateodioev\OllamaBot\Db\{SqliteDatabase};
+use Mateodioev\OllamaBot\Events\{Chat, Models, PrivateTextListener, Search, SetModel, Start, TerminateCompletionRequest, ViewCompletionDetails};
 use Mateodioev\OllamaBot\Repository\{SqliteUserRepository};
 use Mateodioev\TgHandler\{Bot, Log};
 use Revolt\EventLoop;
@@ -33,7 +33,8 @@ $bot
     ->onEvent(new Models())
     ->onEvent(new TerminateCompletionRequest())
     ->onEvent(new PrivateTextListener())
-    ->onEvent(new ViewCompletionDetails());
+    ->onEvent(new ViewCompletionDetails())
+    ->onEvent(new Search());
 
 // $db = new MysqlDatabase('mysql:host=' . env('DB_HOST') . ';dbname=' . env('DB_NAME') . ';charset=utf8mb4', env('DB_USER'), env('DB_PASS'));
 $db = new SqliteDatabase('db.sqlite');

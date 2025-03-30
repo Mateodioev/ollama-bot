@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Mateodioev\OllamaBot\Tavily;
 
-use Amp\Http\Client\HttpClientBuilder;
-use Amp\Http\Client\Request;
-use function Amp\ByteStream\buffer;
+use Amp\Http\Client\{HttpClientBuilder, Request};
 
 class Client
 {
@@ -36,10 +34,9 @@ class Client
     {
         $settings ??= new SearchSettings();
         $params   = $settings->build($query);
-        var_dump($params);
 
         $result = $this->httpClient($params);
-        var_dump($result);
+
         return Response::map(json_decode($result, true));
     }
 }

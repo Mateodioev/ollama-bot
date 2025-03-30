@@ -19,7 +19,8 @@ class HttpClient
         private string $baseURL = self::BASE_URL,
         public string $model = 'llama2',
         public ?Cancellation $cancellation = null
-    ) {
+    )
+    {
         $this->disableStream();
     }
 
@@ -40,13 +41,6 @@ class HttpClient
     public function chat(Chat $messages, ?OllamaParameters $options = null): Payload
     {
         throw new Exception("Not implemented yet.");
-
-        /* return $this->makeRequest('/api/chat', [
-            'model'   => $this->model,
-            'messages' => $messages->toJson(),
-            'options' => ($options ?? OllamaParameters::default())->toArray(),
-            ...$this->opts,
-        ]); */
     }
 
     public function tags(): Payload
@@ -91,7 +85,7 @@ class HttpClient
             $req->setBody(json_encode($body));
         }
         $req->setTransferTimeout(300);
-        $req->setInactivityTimeout(70);
+        $req->setInactivityTimeout(300);
 
         $res = $client->request($req, $this->cancellation);
 

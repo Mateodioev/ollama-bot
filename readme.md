@@ -9,11 +9,14 @@ If you want to generate a completion just send a private message to the bot or i
 
 - `/setmodel` Change your current model
 - `/start` 
+- `/search` Use internet results to enhance answers
+- `/chat` Chat in public groups
 
 ## Installation
 
 ### Requirements:
 - Docker
+- [Tavily](https://tavily.com/) api key
 
 ### Steps
 
@@ -23,12 +26,17 @@ git clone https://github.com/Mateodioev/ollama-bot.git
 cd ollama-bot
 ```
 
-2. Setup docker
+2. Copy .env file and modify env file
+```bash
+cp .env.example .env
+```
+
+3. Setup docker
 ```bash
 docker compose up --build
 ```
 
-3. Install ollama models
+4. Install ollama models
 ```bash
 docker compose exec -T ollama ollama pull <model name>
 ```

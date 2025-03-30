@@ -25,6 +25,48 @@ class SearchSettings
         $this->days              = 5;
     }
 
+    public function setTopic(SearchTopic $topic): self
+    {
+        $this->topic = $topic;
+        return $this;
+    }
+
+    public function setDepth(SearchDepth $depth): self
+    {
+        $this->depth = $depth;
+        return $this;
+    }
+
+    public function setMaxResults(int $maxResults): self
+    {
+        $this->maxResults = $maxResults;
+        return $this;
+    }
+
+    public function setTimeRange(TimeRange $timeRange): self
+    {
+        $this->timeRange = $timeRange;
+        return $this;
+    }
+
+    public function setIncludeAnswer(IncludeAnswer $includeAnswer): self
+    {
+        $this->includeAnswer = $includeAnswer;
+        return $this;
+    }
+
+    public function setIncludeRawContent(bool $includeRawContent): self
+    {
+        $this->includeRawContent = $includeRawContent;
+        return $this;
+    }
+
+    public function setDays(int $days): self
+    {
+        $this->days = $days;
+        return $this;
+    }
+
     public function build(string $query): array
     {
         $values = [
